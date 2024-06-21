@@ -40,17 +40,103 @@
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 28-February-2024</strong></label>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.1.0 / 05-June-2024</strong></label>
 <div>
-<h2 id="first-release">First Release</h2>
-<ul>
-<li>First official Release of <strong>STM32CubeH7RS</strong> HAL/LL Drivers supporting <strong>STM32H7Rx/Sx</strong> devices</li>
-</ul>
+<h2 id="main-changes">Main Changes</h2>
+<h3 id="maintenance-release-of-stm32cubeh7rs-halll-drivers-supporting-stm32h7rxsx-devices">Maintenance Release of <strong>STM32CubeH7RS</strong> HAL/LL Drivers supporting <strong>STM32H7Rx/Sx</strong> devices</h3>
 <h2 id="contents">Contents</h2>
+<h3 id="hal-drivers-updates"><strong>HAL Drivers</strong> updates</h3>
 <ul>
-<li><strong>HAL</strong>: ADC, CEC, CORDIC, CORTEX, CRC, CRS, CRYP, DBGMCU, DCMIPP, DLB, DMA (HPDMA and GPDMA), DMA2D, DTS, ETH, EXTI, FDCAN, FLASH, FMC, GPIO, GFXMMU, GFXTIM, GPU2D, HASH, I2C, I3C, I2S, ICACHE, IRDA, IWDG, JPEG, LPTIM, LTDC, MCE, MDF, MDIOS, MMC/NAND/NOR/SD/SDRAM/SRAM, PKA, PSSI, PWR, RAMECC, RCC, RNG, RTC, SAI, SBS, SPDIFRX, SMARTCARD, SMBUS, SPI, TIM, UART, USART, USB (HCD and PCD), WWDG, XSPI</li>
-<li><strong>LL</strong>: ADC, CORDIC, CORTEX, CRC, CRS, DMA, EXTI, FMC, GPIO, I2C, I3C, ICACHE, LPTIM, LPUART, PKA, PWR, RCC, RNG, RTC, SDMMC, SPI, SYSTEM, TIM, USART, USB, UTILS, UCPD<br />
+<li><strong>HAL CORDIC</strong> driver
+<ul>
+<li>Remove empty lines for quality code indentation</li>
+</ul></li>
+<li><strong>HAL DCMIPP</strong> driver
+<ul>
+<li>Fix macro IS_DCMIPP_MAX_OUTSTANDING_TRANSACTIONS</li>
+</ul></li>
+<li><strong>HAL ETH</strong> driver
+<ul>
+<li>Fix undefined Macro Usage in ETH_DMA_Status_Flags</li>
+</ul></li>
+<li><strong>HAL FDCAN</strong> driver
+<ul>
+<li>Fix the incorrect comment in HAL_FDCAN</li>
+</ul></li>
+<li><strong>HAL FLASH</strong> driver
+<ul>
+<li>Correct wrong information in FLASH peripheral features section</li>
+<li>Correct buffer overflow or memory corruption in HAL_FLASHEx_GetKey()</li>
+<li>Remove number of WS according to RM</li>
+<li>Correct codespell typos</li>
+</ul></li>
+<li><strong>HAL I3C</strong> driver
+<ul>
+<li>Add interfaces to manage RESET Pattern, exit pattern, arbitration</li>
+<li>Check I3C frequency to ensure it is not above a maximum value (257MHZ)</li>
+<li>Optimization HAL interfaces, use LL interface instead of tmp parameters</li>
+<li>Resolve coverity warning</li>
+<li>Add #ifdef HAL_I3C_MODULE_ENABLED in the file stm32h7rsxx_util_i3c.c<br />
 </li>
+</ul></li>
+<li><strong>HAL MCE</strong> driver
+<ul>
+<li>Change Timeout implementation using if condition instead of while loop</li>
+</ul></li>
+<li><strong>HAL PKA</strong> driver
+<ul>
+<li>Fix SAES decryption after PKA deinit</li>
+</ul></li>
+<li><strong>HAL RNG</strong> driver
+<ul>
+<li>Update the flag in New check to avoid false timeout detection</li>
+</ul></li>
+<li><strong>HAL UART</strong> driver
+<ul>
+<li>Add HAL_UART_RXEVENT_IDLE event notification to user in case of HAL_UARTEx_ReceiveToIdle_DMA() use with Circular DMA, even if occurring just after TC event.</li>
+<li>Align prescaler value used by default in UART_GET_DIV_FACTOR macro with RM.</li>
+<li>Correct wrong comment in HAL_UARTEx_DisableFifoMode() function</li>
+<li>Ensure UART Rx buffer is not written beyond boundaries in case of RX FIFO reception in Interrupt mode</li>
+</ul></li>
+<li><strong>HAL USART</strong> driver
+<ul>
+<li>Align prescaler value used by default in USART_GET_DIV_FACTOR macro with RM.</li>
+<li>Correct wrong comment in HAL_USARTEx_DisableFifoMode() function</li>
+<li>Improve the visibility of the SPI function support in HAL USART description</li>
+</ul></li>
+<li><strong>HAL XSPI</strong> driver
+<ul>
+<li>Change handle state to HAL_XSPI_STATE_READY in case of Timeout to avoid blocking driver operation</li>
+<li>Solve MISRA 8.13 warning in HAL_XSPIM_Config() prototype</li>
+<li>Update FIFO size to 32 byte.</li>
+<li>Update management of SSHIFT when DTR is activated for data transfer.</li>
+<li>Update state verification inside Abort functions.</li>
+</ul></li>
+</ul>
+<h3 id="ll-drivers-updates"><strong>LL Drivers</strong> updates</h3>
+<ul>
+<li><strong>LL CORDIC</strong> driver
+<ul>
+<li>Remove empty lines for quality code indentation</li>
+</ul></li>
+<li><strong>LL DMA2D</strong> driver
+<ul>
+<li>Fix coverity warning Bitwise-and with zero</li>
+</ul></li>
+<li><strong>LL FMC</strong> driver
+<ul>
+<li>Astyle format</li>
+<li>Fix Astyle rule issue in all FMC drivers</li>
+</ul></li>
+<li><strong>LL I3C</strong> driver
+<ul>
+<li>Check I3C frequency to ensure it is not above a maximum value (257MHZ</li>
+</ul></li>
+<li><strong>LL SYSTEM</strong> driver
+<ul>
+<li>Remove number of WS according to RM</li>
+</ul></li>
 </ul>
 <h2 id="supported-devices-and-boards">Supported Devices and boards</h2>
 <ul>
@@ -69,6 +155,40 @@
 <li>None</li>
 </ul>
 <h2 id="notes">Notes</h2>
+<ul>
+<li>None</li>
+</ul>
+</div>
+</div>
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.0.0 / 28-February-2024</strong></label>
+<div>
+<h2 id="first-release">First Release</h2>
+<ul>
+<li>First official Release of <strong>STM32CubeH7RS</strong> HAL/LL Drivers supporting <strong>STM32H7Rx/Sx</strong> devices</li>
+</ul>
+<h2 id="contents-1">Contents</h2>
+<ul>
+<li><strong>HAL</strong>: ADC, CEC, CORDIC, CORTEX, CRC, CRS, CRYP, DBGMCU, DCMIPP, DLB, DMA (HPDMA and GPDMA), DMA2D, DTS, ETH, EXTI, FDCAN, FLASH, FMC, GPIO, GFXMMU, GFXTIM, GPU2D, HASH, I2C, I3C, I2S, ICACHE, IRDA, IWDG, JPEG, LPTIM, LTDC, MCE, MDF, MDIOS, MMC/NAND/NOR/SD/SDRAM/SRAM, PKA, PSSI, PWR, RAMECC, RCC, RNG, RTC, SAI, SBS, SPDIFRX, SMARTCARD, SMBUS, SPI, TIM, UART, USART, USB (HCD and PCD), WWDG, XSPI</li>
+<li><strong>LL</strong>: ADC, CORDIC, CORTEX, CRC, CRS, DMA, EXTI, FMC, GPIO, I2C, I3C, ICACHE, LPTIM, LPUART, PKA, PWR, RCC, RNG, RTC, SDMMC, SPI, SYSTEM, TIM, USART, USB, UTILS, UCPD<br />
+</li>
+</ul>
+<h2 id="supported-devices-and-boards-1">Supported Devices and boards</h2>
+<ul>
+<li>STM32H7S7xx, STM32H7S3xx, STM32H7R7xx, STM32H7R3xx devices</li>
+</ul>
+<h2 id="backward-compatibility-1">Backward compatibility</h2>
+<ul>
+<li>Not applicable</li>
+</ul>
+<h2 id="known-limitations-1">Known Limitations</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="dependencies-1">Dependencies</h2>
+<ul>
+<li>None</li>
+</ul>
+<h2 id="notes-1">Notes</h2>
 <ul>
 <li>None</li>
 </ul>

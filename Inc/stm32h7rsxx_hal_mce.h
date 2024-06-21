@@ -260,8 +260,6 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
   * @}
   */
 
-
-
 /**
   * @}
   */
@@ -334,8 +332,6 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
    ((READ_BIT((__HANDLE__)->Instance->IASR, MCE_IASR_IAEF) == MCE_IASR_IAEF) && \
     (READ_BIT((__HANDLE__)->Instance->IAESR, ((__FLAG__) & ~MCE_IASR_IAEF)) == ((__FLAG__) & ~MCE_IASR_IAEF))))
 
-
-
 /**
   * @brief  Clear MCE peripheral illegal/configuration access flag
   * @param  __HANDLE__ pointer to an MCE_HandleTypeDef structure that contains
@@ -357,8 +353,6 @@ typedef  void (*pMCE_CallbackTypeDef)(MCE_HandleTypeDef *hmce); /*!< pointer to 
 /**
   * @}
   */
-
-
 
 
 /* Exported functions ---------------------------------------------------------*/
@@ -459,7 +453,6 @@ uint32_t HAL_MCE_KeyCRCComputation(const uint32_t *pKey);
                                                   (((__ALGO__) == MCE_NO_CIPHER)         || \
                                                    ((__ALGO__) == MCE_BLOCK_CIPHER)      || \
                                                    ((__ALGO__) == MCE_FASTBLOCK_CIPHER)))
-
 
 
 #endif /* MCE1 */

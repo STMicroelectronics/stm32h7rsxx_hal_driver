@@ -3691,6 +3691,9 @@ static void JPEG_ReadInputData(JPEG_HandleTypeDef *hjpeg, uint32_t nbRequestWord
 
 /**
   * @brief  Start the JPEG DMA process (encoding/decoding)
+  * @note   The DMA interrupt must have a higher priority than the JPEG 
+  *         interrupt to prevent the JPEG interrupt from preempting the DMA interrupt
+  *         before the DMA state is updated to ready.
   * @param  hjpeg pointer to a JPEG_HandleTypeDef structure that contains
   *         the configuration information for JPEG module
   * @retval JPEG_PROCESS_DONE if process ends else JPEG_PROCESS_ONGOING
@@ -3871,16 +3874,18 @@ static void JPEG_DMA_ContinueProcess(JPEG_HandleTypeDef *hjpeg)
     if (hjpeg->hdmain->State == HAL_DMA_STATE_BUSY)
     {
       /* Stop the DMA In Xfer*/
-      (void) HAL_DMA_Abort(hjpeg->hdmain);
+      (void) HAL_DMA_Abort_IT(hjpeg->hdmain);
     }
 
     if (hjpeg->hdmaout->State == HAL_DMA_STATE_BUSY)
     {
       /* Stop the DMA out Xfer*/
-      (void) HAL_DMA_Abort(hjpeg->hdmaout);
+      (void) HAL_DMA_Abort_IT(hjpeg->hdmaout);
     }
-
-    JPEG_DMA_EndProcess(hjpeg);
+    else
+    {
+      JPEG_DMA_EndProcess(hjpeg);
+    }
   }
 
 

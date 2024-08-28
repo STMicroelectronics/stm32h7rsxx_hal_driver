@@ -3369,11 +3369,13 @@ static void JPEG_Init_Process(JPEG_HandleTypeDef *hjpeg)
 static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
 {
   uint32_t tmpContext;
+  uint32_t itsource = hjpeg->Instance->CR;
+  uint32_t itflag = hjpeg->Instance->SR;
 
   /*End of header processing flag */
   if ((hjpeg->Context & JPEG_CONTEXT_OPERATION_MASK) == JPEG_CONTEXT_DECODE)
   {
-    if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_HPDF) != 0UL)
+    if ((itflag & JPEG_FLAG_HPDF) != 0UL)
     {
       /*Call Header parsing complete callback */
       (void) HAL_JPEG_GetInfo(hjpeg, &hjpeg->Conf);
@@ -3399,13 +3401,13 @@ static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
   /*Input FIFO status handling*/
   if ((hjpeg->Context &  JPEG_CONTEXT_PAUSE_INPUT) == 0UL)
   {
-    if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_IFTF) != 0UL)
+    if ((itflag & JPEG_FLAG_IFTF) != 0UL)
     {
       /*Input FIFO threshold flag */
       /*JPEG_FIFO_TH_SIZE words can be written in */
       JPEG_ReadInputData(hjpeg, JPEG_FIFO_TH_SIZE);
     }
-    else if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_IFNFF) != 0UL)
+    else if ((itflag & JPEG_FLAG_IFNFF) != 0UL)
     {
       /*Input FIFO Not Full flag */
       /*32-bit value can be written in */
@@ -3417,17 +3419,16 @@ static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
     }
   }
 
-
   /*Output FIFO flag handling*/
   if ((hjpeg->Context &  JPEG_CONTEXT_PAUSE_OUTPUT) == 0UL)
   {
-    if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_OFTF) != 0UL)
+    if ((itflag & JPEG_FLAG_OFTF) != 0UL)
     {
       /*Output FIFO threshold flag */
       /*JPEG_FIFO_TH_SIZE words can be read out */
       JPEG_StoreOutputData(hjpeg, JPEG_FIFO_TH_SIZE);
     }
-    else if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_OFNEF) != 0UL)
+    else if ((itflag & JPEG_FLAG_OFNEF) != 0UL)
     {
       /*Output FIFO Not Empty flag */
       /*32-bit value can be read out */
@@ -3440,7 +3441,7 @@ static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
   }
 
   /*End of Conversion handling :i.e EOC flag is high and OFTF low and OFNEF low*/
-  if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_EOCF | JPEG_FLAG_OFTF | JPEG_FLAG_OFNEF) == JPEG_FLAG_EOCF)
+  if ((itflag & (JPEG_FLAG_EOCF | JPEG_FLAG_OFTF | JPEG_FLAG_OFNEF)) == JPEG_FLAG_EOCF)
   {
     /*Stop Encoding/Decoding*/
     hjpeg->Instance->CONFR0 &=  ~JPEG_CONFR0_START;
@@ -3498,7 +3499,6 @@ static uint32_t JPEG_Process(JPEG_HandleTypeDef *hjpeg)
 
     return JPEG_PROCESS_DONE;
   }
-
 
   return JPEG_PROCESS_ONGOING;
 }
@@ -3828,10 +3828,13 @@ static HAL_StatusTypeDef JPEG_DMA_StartProcess(JPEG_HandleTypeDef *hjpeg)
   */
 static void JPEG_DMA_ContinueProcess(JPEG_HandleTypeDef *hjpeg)
 {
+  uint32_t itsource = hjpeg->Instance->CR;
+  uint32_t itflag = hjpeg->Instance->SR;
+
   /*End of header processing flag rises*/
   if ((hjpeg->Context & JPEG_CONTEXT_OPERATION_MASK) == JPEG_CONTEXT_DECODE)
   {
-    if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_HPDF) != 0UL)
+    if ((itflag & JPEG_FLAG_HPDF) != 0UL)
     {
       /*Call Header parsing complete callback */
       (void) HAL_JPEG_GetInfo(hjpeg, &hjpeg->Conf);
@@ -3856,9 +3859,9 @@ static void JPEG_DMA_ContinueProcess(JPEG_HandleTypeDef *hjpeg)
   }
 
   /*End of Conversion handling*/
-  if (__HAL_JPEG_GET_FLAG(hjpeg, JPEG_FLAG_EOCF) != 0UL)
+  if ((itflag & JPEG_FLAG_EOCF) != 0UL)
   {
-    /*Disabkle JPEG In/Out DMA Requests*/
+    /*Disable JPEG In/Out DMA Requests*/
     JPEG_DISABLE_DMA(hjpeg, JPEG_DMA_ODMA | JPEG_DMA_IDMA);
 
     hjpeg->Context |= JPEG_CONTEXT_ENDING_DMA;
@@ -3887,8 +3890,6 @@ static void JPEG_DMA_ContinueProcess(JPEG_HandleTypeDef *hjpeg)
       JPEG_DMA_EndProcess(hjpeg);
     }
   }
-
-
 }
 
 /**
